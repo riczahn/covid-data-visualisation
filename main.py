@@ -18,14 +18,25 @@ def load_age_pyramid():
     return pd.read_csv('data/age_pyramid.csv', delimiter=';')
 
 
-def main():
-    population_development = load_population_development()
-    deaths = population_development[['Jahr', 'Sterbefälle']]
-    deaths.plot.bar(x='Jahr', y='Sterbefälle', rot=0)
+def format_number(data_value, index):
+    """
+    Formats the number below one million to use K for thousands (e.g. 700K) and above to use M for millions (e.g. 1M).
+    """
+    if data_value >= 1_000_000:
+        formatter = '{:1.1f}M'.format(data_value * 0.000_001)
+    else:
+        formatter = '{:1.0f}K'.format(data_value * 0.001)
+    return formatter
 
+
+def plot_death_cases_history():
+    data = load_population_development()
+    plot = data.plot(x='Jahr', y='Sterbefälle', title="Death Cases in Germany 1950 - 2020", ylabel="Deaths",
+                       xlabel="Year", yticks=[700_000, 800_000, 900_000, 1_000_000], legend=False, style="black", rot=0)
+
+    plot.yaxis.set_major_formatter(format_number)
     plt.show()
 
 
 if __name__ == '__main__':
-    main()
-
+    plot_death_cases_history()
