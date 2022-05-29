@@ -31,3 +31,6 @@ https://www.demografie-portal.de/DE/Fakten/natuerliche-bevoelkerungsentwicklung.
 für 2020\
 https://www-genesis.destatis.de/genesis/online?operation=previous&levelindex=1&step=1&titel=Ergebnis&levelid=1651066706405&acceptscookies=false#abreadcrumb
 
+# sjdjs
+ARMA
+Kaggle Example

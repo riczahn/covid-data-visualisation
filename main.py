@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy
 import matplotlib.pyplot as plt
 
 
@@ -20,7 +21,7 @@ def load_age_pyramid():
 
 def format_number(data_value, index):
     """
-    Formats the number below one million to use K for thousands (e.g. 700K) and above to use M for millions (e.g. 1M).
+    Formats numbers below one million to use K for thousands (e.g. 700K) and above to use M for millions (e.g. 1M).
     """
     if data_value >= 1_000_000:
         formatter = '{:1.1f}M'.format(data_value * 0.000_001)
@@ -38,5 +39,43 @@ def plot_death_cases_history():
     plt.show()
 
 
+def plot_monthly_death_cases():
+    data = load_monthly_male_death_cases_per_age_group()
+    print(data)
+    data.drop(columns=["Nr.", "Jahr", "unter … Jahren", "Insgesamt"], inplace=True)
+
+    print(data)
+    rows = [i * 18 for i in range(int(data.size/18))]
+    print(rows)
+
+
+def placeholder_uk():
+    x = [1, 2, 3, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 18, 19, 21, 22]
+    y = [100, 90, 80, 60, 60, 55, 60, 65, 70, 70, 75, 76, 78, 79, 90, 99, 99, 100]
+
+    df = pd.read_csv('data/uk/UK_data_v1.csv')
+
+    date = df['date']
+    new_cases = df['newCasesBySpecimenDate']
+
+    print(date)
+    print(new_cases)
+
+    my_model = numpy.poly1d(numpy.polyfit(x, y, 3))
+    my_line = numpy.linspace(1, len(date), 100)
+    df.plot(x='date', y='newCasesBySpecimenDate')
+
+
 if __name__ == '__main__':
-    plot_death_cases_history()
+    df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
+
+    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'])
+    # df.plot(x='date', y='newCasesBySpecimenDate', color='r')
+    plot.yaxis.set_major_formatter(format_number)
+
+    # plt.scatter(date, new_cases)
+    # plt.plot(my_line, my_model(my_line))
+    plt.show()
+    # plot_death_cases_history()
+    # plot_monthly_death_cases()
+    #
