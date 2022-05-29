@@ -68,10 +68,7 @@ def placeholder_uk():
     df.plot(x='date', y='newCasesBySpecimenDate')
 
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
-
+def show_graph_v1():
     figure1 = plt.Figure(figsize=(6, 5), dpi=100)
     ax1 = figure1.add_subplot(111)
     bar1 = FigureCanvasTkAgg(figure1, root)
@@ -79,5 +76,23 @@ if __name__ == '__main__':
     plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'], ax=ax1)
     plot.yaxis.set_major_formatter(format_number)
     ax1.set_title('New Covid Cases & Tests')
+    plt.show()
 
-    root.mainloop()
+
+def show_graph_v2():
+    # will print an interactive window when executed via cmd
+    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'])
+    plot.yaxis.set_major_formatter(format_number)
+    plt.show()
+
+
+if __name__ == '__main__':
+    # root = tk.Tk()
+    df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
+
+    # button = tk.Button(root, text='Show Graph', command=show_graph_v1)
+    # button.pack()
+    # root.mainloop()
+
+    show_graph_v2()
+
