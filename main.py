@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy
 import matplotlib.pyplot as plt
+import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 def load_monthly_female_death_cases_per_age_group():
@@ -67,15 +69,15 @@ def placeholder_uk():
 
 
 if __name__ == '__main__':
+    root = tk.Tk()
     df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
 
-    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'])
-    # df.plot(x='date', y='newCasesBySpecimenDate', color='r')
+    figure1 = plt.Figure(figsize=(6, 5), dpi=100)
+    ax1 = figure1.add_subplot(111)
+    bar1 = FigureCanvasTkAgg(figure1, root)
+    bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'], ax=ax1)
     plot.yaxis.set_major_formatter(format_number)
+    ax1.set_title('New Covid Cases & Tests')
 
-    # plt.scatter(date, new_cases)
-    # plt.plot(my_line, my_model(my_line))
-    plt.show()
-    # plot_death_cases_history()
-    # plot_monthly_death_cases()
-    #
+    root.mainloop()
