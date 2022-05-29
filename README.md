@@ -13,7 +13,7 @@ Darüber legen wir die Anzahl an Coronatoten
 - Globale Veränderung der Sterberate?
     Vermutlich nicht..
 
-##----------- Links ---------------
+## ----------- Links ---------------
 
 #### Sterberate pro Altersgruppe
 2016-2022\
