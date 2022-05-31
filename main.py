@@ -2,7 +2,8 @@ import pandas as pd
 import numpy
 import matplotlib.pyplot as plt
 import tkinter as tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backend_bases import key_press_handler
 
 
 def load_monthly_female_death_cases_per_age_group():
@@ -69,14 +70,10 @@ def placeholder_uk():
 
 
 def show_graph_v1():
-    figure1 = plt.Figure(figsize=(6, 5), dpi=100)
-    ax1 = figure1.add_subplot(111)
-    bar1 = FigureCanvasTkAgg(figure1, root)
+    root = tk.Tk()
+    bar1 = FigureCanvasTkAgg(build_graph(), root)
     bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'], ax=ax1)
-    plot.yaxis.set_major_formatter(format_number)
-    ax1.set_title('New Covid Cases & Tests')
-    plt.show()
+    root.mainloop()
 
 
 def show_graph_v2():
@@ -86,13 +83,30 @@ def show_graph_v2():
     plt.show()
 
 
-if __name__ == '__main__':
-    # root = tk.Tk()
+def build_graph():
     df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
 
+    figure1 = plt.Figure(figsize=(6, 5), dpi=100)
+    ax1 = figure1.add_subplot(111)
+    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'], ax=ax1)
+    plot.yaxis.set_major_formatter(format_number)
+    ax1.set_title('New Covid Cases & Tests')
+    return figure1
+
+
+def build_ui():
+    root = tk.Tk()
+    bar1 = FigureCanvasTkAgg(build_graph(), root)
+    bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+    # if we want to add a small zoom thing
+    # figure1.add_axes([0.2, 0.3, 0.2, 0.2])
+    root.mainloop()
+
+
+if __name__ == '__main__':
     # button = tk.Button(root, text='Show Graph', command=show_graph_v1)
     # button.pack()
-    # root.mainloop()
 
-    show_graph_v2()
-
+    # show_graph_v1()
+    # build_ui()
+    pass
