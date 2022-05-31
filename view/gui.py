@@ -1,9 +1,9 @@
-import tkinter
+import tkinter as tk
 
 from view.Graph import Graph
 
-root = tkinter.Tk()
-root.wm_title("Embedding in Tk")
+root = tk.Tk()
+root.wm_title("Covid Analysis Tool")
 
 graph = Graph(root)
 graph.draw()
@@ -14,10 +14,10 @@ def _quit():
     root.destroy()
 
 
-button = tkinter.Button(master=root, text="Quit", command=_quit)
-button.pack(side=tkinter.BOTTOM)
+button = tk.Button(master=root, text="Quit", command=_quit)
+button.pack(side=tk.BOTTOM)
 
-tkinter.mainloop()
+tk.mainloop()
 
 if __name__ == '__main__':
     pass

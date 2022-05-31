@@ -1,9 +1,8 @@
-import pandas as pd
-import numpy
-import matplotlib.pyplot as plt
 import tkinter as tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-from matplotlib.backend_bases import key_press_handler
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 def load_monthly_female_death_cases_per_age_group():
@@ -52,39 +51,8 @@ def plot_monthly_death_cases():
     print(rows)
 
 
-def placeholder_uk():
-    x = [1, 2, 3, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 18, 19, 21, 22]
-    y = [100, 90, 80, 60, 60, 55, 60, 65, 70, 70, 75, 76, 78, 79, 90, 99, 99, 100]
-
-    df = pd.read_csv('data/uk/UK_data_v1.csv')
-
-    date = df['date']
-    new_cases = df['newCasesBySpecimenDate']
-
-    print(date)
-    print(new_cases)
-
-    my_model = numpy.poly1d(numpy.polyfit(x, y, 3))
-    my_line = numpy.linspace(1, len(date), 100)
-    df.plot(x='date', y='newCasesBySpecimenDate')
-
-
-def show_graph_v1():
-    root = tk.Tk()
-    bar1 = FigureCanvasTkAgg(build_graph(), root)
-    bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-    root.mainloop()
-
-
-def show_graph_v2():
-    # will print an interactive window when executed via cmd
-    plot = df.plot(x='date', y=['newVirusTestsByPublishDate', 'newCasesBySpecimenDate'], color=['b', 'r'])
-    plot.yaxis.set_major_formatter(format_number)
-    plt.show()
-
-
 def build_graph():
-    df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
+    df = pd.read_csv('../data/uk/UK_new_cases_and_tests.csv')
 
     figure1 = plt.Figure(figsize=(6, 5), dpi=100)
     ax1 = figure1.add_subplot(111)
