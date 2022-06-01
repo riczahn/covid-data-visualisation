@@ -52,7 +52,7 @@ def plot_monthly_death_cases():
 
 
 def build_graph():
-    df = pd.read_csv('../data/uk/UK_new_cases_and_tests.csv')
+    df = pd.read_csv('data/uk/UK_new_cases_and_tests.csv')
 
     figure1 = plt.Figure(figsize=(6, 5), dpi=100)
     ax1 = figure1.add_subplot(111)

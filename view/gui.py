@@ -1,12 +1,8 @@
 import tkinter as tk
 
+from FigureProvider import FigureProvider
 from view.Graph import Graph
-
-root = tk.Tk()
-root.wm_title("Covid Analysis Tool")
-
-graph = Graph(root)
-graph.draw()
+from view.Sidebar import Sidebar
 
 
 def _quit():
@@ -14,10 +10,17 @@ def _quit():
     root.destroy()
 
 
-button = tk.Button(master=root, text="Quit", command=_quit)
-button.pack(side=tk.BOTTOM)
-
-tk.mainloop()
-
 if __name__ == '__main__':
-    pass
+    root = tk.Tk()
+    root.wm_title("Covid Analysis Tool")
+
+    graph = Graph(root, FigureProvider())
+    graph.pack()
+
+    button = tk.Button(master=root, text="Quit", command=_quit)
+    button.pack(side=tk.BOTTOM)
+
+    sidebar = Sidebar(root, graph)
+    sidebar.pack()
+
+    tk.mainloop()
