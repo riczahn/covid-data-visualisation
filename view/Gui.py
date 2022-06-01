@@ -23,4 +23,6 @@ if __name__ == '__main__':
     sidebar = Sidebar(root, graph)
     sidebar.pack()
 
-    tk.mainloop()
+    while True:
+        graph.update()
+        root.update()

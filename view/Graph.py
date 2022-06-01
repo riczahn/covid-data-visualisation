@@ -14,20 +14,20 @@ class Graph:
         self.canvas = FigureCanvasTkAgg(self.figure, master=root)
         self.toolbar = NavigationToolbar2Tk(self.canvas, self.root)
         self.canvas.mpl_connect("key_press_event", self.on_key_press)
-        self.draw()
+        self.update()
 
-    def draw(self):
+    def update(self):
         self.canvas.draw()
         self.toolbar.update()
 
     def pack(self):
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
     def on_key_press(self, event):
-        print("you pressed {}".format(event.key))
         key_press_handler(event, self.canvas, self.toolbar)
 
     def load_data(self):
-        print('called')
+        self.figure = self.figure_provider.get_uk_covid_tests_and_cases()
+        self.canvas.figure = self.figure
+        self.update()
 
