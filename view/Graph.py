@@ -27,7 +27,9 @@ class Graph:
         key_press_handler(event, self.canvas, self.toolbar)
 
     def load_data(self):
+        self.toolbar.pack_forget()
         self.figure = self.figure_provider.get_uk_covid_tests_and_cases()
         self.canvas.figure = self.figure
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self.root)  # todo this solution will throw locking exceptions
         self.update()
 

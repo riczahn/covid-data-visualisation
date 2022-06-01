@@ -1,3 +1,5 @@
+import matplotlib.dates as dates
+
 class Formatter:
     def format_numbers(self, data_value, index):
         """
@@ -8,3 +10,6 @@ class Formatter:
         else:
             formatter = '{:1.0f}K'.format(data_value * 0.001)
         return formatter
+
+    def format_dates(self):
+        return dates.DateFormatter('%d.%m.%Y')
