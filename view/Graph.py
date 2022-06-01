@@ -9,7 +9,7 @@ from FigureProvider import FigureProvider
 class Graph:
     def __init__(self, root, figure_provider: FigureProvider):
         self.root = root
-        self.data_provider = figure_provider
+        self.figure_provider = figure_provider
         self.figure = figure_provider.get_de_death_cases_history()
         self.canvas = FigureCanvasTkAgg(self.figure, master=root)
         self.toolbar = NavigationToolbar2Tk(self.canvas, self.root)
