@@ -34,10 +34,6 @@ class GuiController(tk.Tk):
         self.active_frame = 'uk'
         self.show_frame('uk')
 
-    def show_frame(self, frame_id):
-        frame = self.frames[frame_id]
-        frame.tkraise()
-
     def next_graph(self):
         if self.active_frame == 'uk':
             self.active_frame = 'de'
@@ -45,6 +41,10 @@ class GuiController(tk.Tk):
         else:
             self.active_frame = 'uk'
             self.show_frame('uk')
+
+    def show_frame(self, frame_id):
+        frame = self.frames[frame_id]
+        frame.tkraise()
 
 
 if __name__ == '__main__':

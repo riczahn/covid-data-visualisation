@@ -21,9 +21,5 @@ class Graph:
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         self.toolbar.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
-    def update(self):
-        self.canvas.draw()
-        self.toolbar.update()
-
     def on_key_press(self, event):
         key_press_handler(event, self.canvas, self.toolbar)

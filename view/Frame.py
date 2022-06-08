@@ -16,6 +16,3 @@ class Frame(tk.Frame):
 
         self.graph.pack()
         self.sidebar.pack()
-
-    def update(self):
-        self.graph.update()
