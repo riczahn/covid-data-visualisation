@@ -45,11 +45,7 @@ class GuiController(tk.Tk):
 
 if __name__ == '__main__':
     figure_provider = FigureProvider()
-
-    all_figures = {
-        'uk': figure_provider.get_uk_covid_tests_and_cases(),
-        'de': figure_provider.get_de_death_cases_history()
-    }
+    all_figures = figure_provider.get_all_figures()
 
     gui = GuiController(all_figures)
     gui.mainloop()
