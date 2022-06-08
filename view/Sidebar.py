@@ -1,18 +1,13 @@
 import tkinter as tk
 
-from view.Graph import Graph
-
 
 class Sidebar:
 
-    def __init__(self, root, graph: Graph):
+    def __init__(self, root, controller):
         self.root = root
         self.buttons = []
-        self.graph = graph
-        self.draw()
 
-    def draw(self):
-        button = tk.Button(master=self.root, text="Change", command=self.graph.load_data)
+        button = tk.Button(master=self.root, text="Change", command=controller.next_graph)
         self.buttons.append(button)
 
     def pack(self):
