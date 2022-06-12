@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from FigureProvider import FigureProvider
+from Lockdown import events
 from view.Frame import Frame
 from view.Sidebar import Sidebar
 
@@ -39,6 +40,15 @@ class GuiController(tk.Tk):
 
     def get_current_graph(self):
         return self.active_frame
+
+    def show_covid_events(self):
+        frame = self.frames[self.active_frame]
+        axes = frame.graph.canvas.figure.get_axes()[0]
+        axes.vlines(list(events.keys()), 0, 1, transform=axes.get_xaxis_transform(), colors='r', linestyles='dashed')
+        frame.graph.canvas.draw()
+
+    def show_lockdowns(self):
+        print('called')
 
 
 if __name__ == '__main__':
