@@ -1,12 +1,15 @@
 import tkinter as tk
 
+import Constants
 from FigureProvider import FigureProvider
 from Lockdown import events
+from exception.InvalidParameterException import InvalidParameterException
 from view.Frame import Frame
 from view.Sidebar import Sidebar
 
 
 class GuiController(tk.Tk):
+
     def __init__(self, figures: dict, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.wm_title("Covid Analysis Tool")
@@ -41,14 +44,22 @@ class GuiController(tk.Tk):
     def get_current_graph(self):
         return self.active_frame
 
-    def show_covid_events(self):
+    def show_covid_events(self, action):
         frame = self.frames[self.active_frame]
-        axes = frame.graph.canvas.figure.get_axes()[0]
-        axes.vlines(list(events.keys()), 0, 1, transform=axes.get_xaxis_transform(), colors='r', linestyles='dashed')
+
+        if action == Constants.TOGGLE_ACTIVE:
+            axes = frame.graph.canvas.figure.get_axes()[0]
+            axes.vlines(list(events.keys()), 0, 1, transform=axes.get_xaxis_transform(), colors='r',
+                        linestyles='dashed')
+        elif action == Constants.TOGGLE_INACTIVE:
+            print('wish we would know how to remove this again..')
+        else:
+            raise InvalidParameterException(f'Unsupported action type {action}')
+
         frame.graph.canvas.draw()
 
-    def show_lockdowns(self):
-        print('called')
+    def show_lockdowns(self, action):
+        print(f'called with action {action}')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+import Constants
+
 
 class Sidebar(tk.Frame):
 
@@ -18,14 +20,14 @@ class Sidebar(tk.Frame):
         self.buttons['lockdowns'] = {
             'button': tk.Button(master=self, text="Show Lockdowns", command=lambda: self.button_callback('lockdowns'),
                                 relief="raised"),
-            'toggled': False,
+            'active': False,
             'callback': controller.show_lockdowns
         }
 
         self.buttons['covid_events'] = {
             'button': tk.Button(master=self, text="Show Covid Events",
                                 command=lambda: self.button_callback('covid_events'), relief="raised"),
-            'toggled': False,
+            'active': False,
             'callback': controller.show_covid_events
         }
 
@@ -36,14 +38,14 @@ class Sidebar(tk.Frame):
     def button_callback(self, button_ref):
         button_details = self.buttons.get(button_ref)
 
-        if button_details['toggled']:
-            button_details['toggled'] = False
+        if button_details['active']:
+            button_details['active'] = False
             button_details['button'].config(relief='raised')
-            button_details['callback']()
+            button_details['callback'](Constants.TOGGLE_INACTIVE)
         else:
-            button_details['toggled'] = True
+            button_details['active'] = True
             button_details['button'].config(relief='sunken')
-            button_details['callback']()
+            button_details['callback'](Constants.TOGGLE_ACTIVE)
 
     def handle_change(self, event):
         self.controller.show_frame(self.combo_box.get())
