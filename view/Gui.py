@@ -49,10 +49,11 @@ class GuiController(tk.Tk):
 
         if action == Constants.TOGGLE_ACTIVE:
             axes = frame.graph.canvas.figure.get_axes()[0]
-            axes.vlines(list(events.keys()), 0, 1, transform=axes.get_xaxis_transform(), colors='r',
-                        linestyles='dashed')
+            lines = axes.vlines(list(events.keys()), 0, 1, transform=axes.get_xaxis_transform(), colors='r',
+                                linestyles='dashed')
+            frame.graph.figure_modifiers['covid_event_lines'] = lines
         elif action == Constants.TOGGLE_INACTIVE:
-            print('wish we would know how to remove this again..')
+            frame.graph.figure_modifiers['covid_event_lines'].remove()
         else:
             raise InvalidParameterException(f'Unsupported action type {action}')
 
