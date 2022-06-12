@@ -8,7 +8,6 @@ class GuiController(tk.Tk):
     def __init__(self, figures: dict, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.wm_title("Covid Analysis Tool")
-        self.geometry("800x480+400+240")
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)

@@ -5,19 +5,17 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 
 
-class Graph:
+class Graph(tk.Frame):
     def __init__(self, parent, figure: Figure):
-        self.root = parent
+        tk.Frame.__init__(self, parent)
 
-        self.canvas = FigureCanvasTkAgg(figure, master=parent)
+        self.canvas = FigureCanvasTkAgg(figure, master=self)
         self.canvas.draw()
 
-        self.toolbar = NavigationToolbar2Tk(self.canvas, self.root)
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self)
         self.toolbar.update()
 
         self.canvas.mpl_connect("key_press_event", self.on_key_press)
-
-    def pack(self):
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         self.toolbar.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 

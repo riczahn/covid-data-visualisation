@@ -1,15 +1,22 @@
 import tkinter as tk
 
 
-class Sidebar:
+def print_something():
+    print('callback executed')
 
-    def __init__(self, root, controller):
-        self.root = root
+
+class Sidebar(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
         self.buttons = []
 
-        button = tk.Button(master=self.root, text="Change", command=controller.next_graph)
-        self.buttons.append(button)
+        next_graph_button = tk.Button(master=self, text="Next Graph", command=controller.next_graph)
+        self.buttons.append(next_graph_button)
 
-    def pack(self):
-        for button in self.buttons:
-            button.pack(side=tk.RIGHT, anchor=tk.W)
+        lockdowns_button = tk.Button(master=self, text="Show Lockdowns", command=print_something)
+        self.buttons.append(lockdowns_button)
+
+        for b in self.buttons:
+            b.pack(side=tk.TOP, anchor=tk.W, fill=tk.BOTH)
+
