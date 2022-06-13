@@ -1,3 +1,6 @@
+# To-Do
+* Tooltip for covid events when hovering
+
 ## Idee
 Trend Sterberate pro Altersgruppe von 2012-Dez2019
 Prognose für 2020, 2021, 2022 nach dem Schema
