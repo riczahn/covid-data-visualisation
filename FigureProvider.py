@@ -21,19 +21,6 @@ class FigureProvider:
         figure.autofmt_xdate()
         return figure
 
-    def get_de_death_cases_history(self, figure_size):
-        data = pd.read_csv('data/population_development.csv', delimiter=';')
-
-        figure = plt.Figure(figsize=figure_size, dpi=100)
-        axis = figure.add_subplot(111)
-        plot = data.plot(x='Jahr', y='Sterbefälle', title="Death Cases in Germany 1950 - 2020", ylabel="Deaths",
-                         xlabel="Year", yticks=[700_000, 800_000, 900_000, 1_000_000], legend=False, style="black",
-                         rot=0, ax=axis)
-
-        plot.yaxis.set_major_formatter(self.formatter.format_numbers)
-        axis.set_title('Death Cases in Germany 1950 - 2020')
-        return figure
-
     def get_uk_deaths_by_week(self, figure_size):
         death_by_week_2021_df = pd.read_csv('data/uk/UK_Weekly_deaths.csv')
 
@@ -45,9 +32,32 @@ class FigureProvider:
         axis.set_title('Covid Death Cases in the UK')
         return figure
 
+    def get_uk_pre_conditions_for_covid_deaths(self, figure_size):
+        df = pd.read_excel('data/uk/deathsduetocovid19preexisitingconditions.xlsx', sheet_name='1', header=4)
+        df = df.iloc[1:, :]  # drop first row since its all deaths accumulated
+
+        figure = plt.Figure(figsize=figure_size, dpi=100)
+        sub_figures = figure.subfigures(1, 2, wspace=0.07)
+
+        left_axis = sub_figures[0].subplots(1, 1)
+        df.plot.pie(y='Aged 0 to 64 years \n(Proportion of deaths)', labels=None, autopct='%.1f%%', ax=left_axis,
+                    legend=False)
+        left_axis.set_title('Pre-Conditions of COVID-19 deaths with age 0-64')
+        left_axis.get_yaxis().set_visible(False)
+
+        right_axis = sub_figures[1].subplots(1, 1)
+        df.plot.pie(y='Aged 65 years and over\n(Proportion of deaths)', labels=None, autopct='%.1f%%', ax=right_axis,
+                    legend=False)
+        right_axis.set_title('Pre-Conditions of COVID-19 deaths with age 65+')
+        right_axis.get_yaxis().set_visible(False)
+
+        # todo somehow the values are not correct. biggest part for age 0-64 should be 29.1%
+
+        return figure
+
     def get_all_figures(self, figure_size):
         return {
             'Tests and Cases': self.get_uk_covid_tests_and_cases(figure_size),
             'Deaths': self.get_uk_deaths_by_week(figure_size),
-            'de': self.get_de_death_cases_history(figure_size)
+            'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size)
         }
