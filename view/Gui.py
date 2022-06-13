@@ -2,7 +2,7 @@ import tkinter as tk
 
 import Constants
 from FigureProvider import FigureProvider
-from Lockdown import events
+from Lockdown import events, lockdowns
 from exception.InvalidParameterException import InvalidParameterException
 from view.Frame import Frame
 from view.Sidebar import Sidebar
@@ -60,7 +60,24 @@ class GuiController(tk.Tk):
         frame.graph.canvas.draw()
 
     def show_lockdowns(self, action):
-        print(f'called with action {action}')
+        frame = self.frames[self.active_frame]
+        axes = frame.graph.canvas.figure.get_axes()[0]
+
+        if action == Constants.TOGGLE_ACTIVE:
+            frame.graph.figure_modifiers['lockdowns'] = []
+
+            for lockdown in lockdowns.values():
+                start_date = lockdown['start_date']
+                end_date = lockdown['end_date']
+                area = axes.axvspan(start_date, end_date, color='red', alpha=0.5)
+                frame.graph.figure_modifiers['lockdowns'].append(area)
+        elif action == Constants.TOGGLE_INACTIVE:
+            for area in frame.graph.figure_modifiers['lockdowns']:
+                area.remove()
+        else:
+            raise InvalidParameterException(f'Unsupported action type {action}')
+
+        frame.graph.canvas.draw()
 
 
 if __name__ == '__main__':
