@@ -82,7 +82,7 @@ class GuiController(tk.Tk):
 
 if __name__ == '__main__':
     figure_provider = FigureProvider()
-    all_figures = figure_provider.get_all_figures()
+    all_figures = figure_provider.get_all_figures(Constants.LARGE_FIGURE_SIZE)
 
     gui = GuiController(all_figures)
     gui.mainloop()
