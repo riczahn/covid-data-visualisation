@@ -55,24 +55,10 @@ class FigureProvider:
         df = df.iloc[1:, :]  # drop first row since its all deaths accumulated
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
-        left_axis = figure.add_axes([0, 0.3, 0.5, 0.6], aspect=1)
-        df.plot.pie(y='Aged 0 to 64 years \n(Proportion of deaths)', labels=None, autopct='%.1f%%', pctdistance=1.2,
-                    ax=left_axis,
-                    legend=False, textprops={'fontsize': 8})
-        left_axis.set_title('Pre-Conditions of COVID-19 deaths with age 0-64')
-        left_axis.get_yaxis().set_visible(False)
-
-        right_axis = figure.add_axes([0.5, 0.3, 0.5, 0.6], aspect=1)
-        df.plot.pie(y='Aged 65 years and over\n(Proportion of deaths)', labels=None, autopct='%.1f%%', pctdistance=1.2,
-                    ax=right_axis,
-                    legend=False, textprops={'fontsize': 8})
-        right_axis.set_title('Pre-Conditions of COVID-19 deaths with age 65+')
-        right_axis.get_yaxis().set_visible(False)
-
-        figure.legend(labels=df['Pre-exisiting condition of death due to COVID-19'], loc='lower center',
-                      prop={'size': 5})
-
-        # todo somehow the values are not correct. biggest part for age 0-64 should be 29.1%
+        figure.subplots_adjust(left=0.53)
+        axis = figure.add_subplot(111)
+        df.plot(x='Pre-exisiting condition of death due to COVID-19', y=['Aged 0 to 64 years \n(Number of deaths)', 'Aged 65 years and over\n(Number of deaths)'], ax=axis, kind='barh')
+        axis.set_title('Most common pre-conditions of COVID-19-Deaths')
 
         return figure
 
