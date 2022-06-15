@@ -22,14 +22,17 @@ class FigureProvider:
         return figure
 
     def get_uk_deaths_by_week(self, figure_size):
-        death_by_week_2021_df = pd.read_csv('data/uk/UK_Weekly_deaths.csv')
+        df = pd.read_excel('data/uk/Weekly_Influenza_and_COVID19_report_data_w27v2_2021.xlsx',
+                           sheet_name='Figure 45. SARIWatch-ICUagegrp', header=8, nrows=53)
+        df = df.drop(columns='Unnamed: 0')
+        df = df.rename(columns={'Unnamed: 1': 'Week'})
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
         axis = figure.add_subplot(111)
-        plot = death_by_week_2021_df.plot(x='Week of death',
-                                          y=['28 day definition', '60 day definition'], kind='bar', ax=axis)
-        plot.yaxis.set_major_formatter(self.formatter.format_numbers)
-        axis.set_title('Covid Death Cases in the UK')
+
+        df.plot(x=df.columns[0], y=df.columns[1:9], kind='bar', figsize=figure_size, stacked=True, ax=axis)
+        axis.set_title('Weekly Covid Deaths by Age Group')
+
         return figure
 
     def get_uk_daily_deaths(self, figure_size):
@@ -41,15 +44,6 @@ class FigureProvider:
         axis.set_title('Daily Covid Deaths in the UK')
         return figure
 
-    def get_uk_daily_deaths_by_age_group(self, figure_size):
-        df = pd.read_csv('data/uk/age_group_daily_covid_deaths.csv', parse_dates=['date'])
-
-        figure = plt.Figure(figsize=figure_size, dpi=100)
-        axis = figure.add_subplot(111)
-        df.plot(x='date', y='deaths', stacked=True, ax=axis)  # todo: How to plot this 3 dimensional data?
-        axis.set_title('Daily Covid Deaths by age group')
-        return figure
-
     def get_uk_pre_conditions_for_covid_deaths(self, figure_size):
         df = pd.read_excel('data/uk/deathsduetocovid19preexisitingconditions.xlsx', sheet_name='1', header=4)
         df = df.iloc[1:, :]  # drop first row since its all deaths accumulated
@@ -57,7 +51,9 @@ class FigureProvider:
         figure = plt.Figure(figsize=figure_size, dpi=100)
         figure.subplots_adjust(left=0.53)
         axis = figure.add_subplot(111)
-        df.plot(x='Pre-exisiting condition of death due to COVID-19', y=['Aged 0 to 64 years \n(Number of deaths)', 'Aged 65 years and over\n(Number of deaths)'], ax=axis, kind='barh')
+        df.plot(x='Pre-exisiting condition of death due to COVID-19',
+                y=['Aged 0 to 64 years \n(Number of deaths)', 'Aged 65 years and over\n(Number of deaths)'], ax=axis,
+                kind='barh')
         axis.set_title('Most common pre-conditions of COVID-19-Deaths')
 
         return figure
@@ -91,8 +87,7 @@ class FigureProvider:
         return {
             'Tests and Cases': self.get_uk_covid_tests_and_cases(figure_size),
             'Daily Deaths': self.get_uk_daily_deaths(figure_size),
-            'Weekly Deaths': self.get_uk_deaths_by_week(figure_size),
-            'Deaths by Age Group': self.get_uk_daily_deaths_by_age_group(figure_size),
+            'Weekly Deaths by Age Group': self.get_uk_deaths_by_week(figure_size),
             'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size),
             'Number of Pre-Conditions': self.get_uk_number_of_pre_conditions_for_covid_deaths(figure_size)
         }
