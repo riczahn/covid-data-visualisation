@@ -1,5 +1,15 @@
 # To-Do
-* Tooltip for covid events when hovering
+* Lockdown useful? 28 vs. 14 days in graph
+  * death after how many days on average
+* Switch from Pie chart to sum diagram
+* Influenza graph & COVID graph
+* Tooltip for covid events when hovering (ONLY IF ONE GRAPH SHOWS AN IMPACT OF THE EVENTS)
+* For Presentation: Some sort of Guideline
+  * Graph -> We see this but why? -> next Graph
+  
+## Presentation
+0. Covid Deaths
+1. Covid deaths in relation to overall deaths
 
 ## Idee
 Trend Sterberate pro Altersgruppe von 2012-Dez2019
