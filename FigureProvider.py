@@ -65,14 +65,14 @@ class FigureProvider:
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
         left_axis = figure.add_axes([0, 0.2, 0.5, 0.7], aspect=1)
-        df.plot.pie(y='Aged 0 to 64 years ', labels=None, autopct='%.1f%%', pctdistance=1.2,
+        df.plot.pie(y='Aged 0 to 64 years ', labels=None, autopct='%.0f%%', pctdistance=1.2,
                     ax=left_axis,
                     legend=False, textprops={'fontsize': 8})
         left_axis.set_title('Number of pre-conditions age 0-64')
         left_axis.get_yaxis().set_visible(False)
 
         right_axis = figure.add_axes([0.5, 0.2, 0.5, 0.7], aspect=1)
-        df.plot.pie(y='Aged 65 years and over', labels=None, autopct='%.1f%%', pctdistance=1.2,
+        df.plot.pie(y='Aged 65 years and over', labels=None, autopct='%.0f%%', pctdistance=1.2,
                     ax=right_axis,
                     legend=False, textprops={'fontsize': 8})
         right_axis.set_title('Number of pre-conditions age 65+')
