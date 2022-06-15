@@ -27,11 +27,18 @@ class FigureProvider:
         df = df.drop(columns='Unnamed: 0')
         df = df.rename(columns={'Unnamed: 1': 'Week'})
 
+        df['total'] = df.loc[:, '0 to 4':].sum(axis=1)
+
+        for c in df.columns[1:-1]:
+            df[c] = df[c] / df['total']
+
         figure = plt.Figure(figsize=figure_size, dpi=100)
         axis = figure.add_subplot(111)
 
-        df.plot(x=df.columns[0], y=df.columns[1:9], kind='bar', figsize=figure_size, stacked=True, ax=axis)
+        df.plot(x=df.columns[0], y=df.columns[1:-1], kind='bar', figsize=figure_size, stacked=True, ax=axis)
         axis.set_title('Weekly Covid Deaths by Age Group')
+
+        # CHECK if is this data normalised to per 100.000 inhabitants?
 
         return figure
 
