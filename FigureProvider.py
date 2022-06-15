@@ -56,20 +56,48 @@ class FigureProvider:
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
         left_axis = figure.add_axes([0, 0.3, 0.5, 0.6], aspect=1)
-        df.plot.pie(y='Aged 0 to 64 years \n(Proportion of deaths)', labels=None, autopct='%.1f%%',  pctdistance=1.2, ax=left_axis,
+        df.plot.pie(y='Aged 0 to 64 years \n(Proportion of deaths)', labels=None, autopct='%.1f%%', pctdistance=1.2,
+                    ax=left_axis,
                     legend=False, textprops={'fontsize': 8})
         left_axis.set_title('Pre-Conditions of COVID-19 deaths with age 0-64')
         left_axis.get_yaxis().set_visible(False)
 
         right_axis = figure.add_axes([0.5, 0.3, 0.5, 0.6], aspect=1)
-        df.plot.pie(y='Aged 65 years and over\n(Proportion of deaths)', labels=None, autopct='%.1f%%',  pctdistance=1.2, ax=right_axis,
+        df.plot.pie(y='Aged 65 years and over\n(Proportion of deaths)', labels=None, autopct='%.1f%%', pctdistance=1.2,
+                    ax=right_axis,
                     legend=False, textprops={'fontsize': 8})
         right_axis.set_title('Pre-Conditions of COVID-19 deaths with age 65+')
         right_axis.get_yaxis().set_visible(False)
 
-        figure.legend(labels=df['Pre-exisiting condition of death due to COVID-19'], loc='lower center', prop={'size': 5})
+        figure.legend(labels=df['Pre-exisiting condition of death due to COVID-19'], loc='lower center',
+                      prop={'size': 5})
 
         # todo somehow the values are not correct. biggest part for age 0-64 should be 29.1%
+
+        return figure
+
+    def get_uk_number_of_pre_conditions_for_covid_deaths(self, figure_size):
+        df = pd.read_excel('data/uk/deathsduetocovid19preexisitingconditions.xlsx', sheet_name='2', header=3)
+        df = df[df.Unit != 'Average number of pre-exisiting conditions of COVID-19 deaths']
+        df = df[df.Unit != 'Proportion of COVID-19 deaths with no pre-exisiting conditions']
+
+        figure = plt.Figure(figsize=figure_size, dpi=100)
+        left_axis = figure.add_axes([0, 0.2, 0.5, 0.7], aspect=1)
+        df.plot.pie(y='Aged 0 to 64 years ', labels=None, autopct='%.1f%%', pctdistance=1.2,
+                    ax=left_axis,
+                    legend=False, textprops={'fontsize': 8})
+        left_axis.set_title('Number of pre-conditions age 0-64')
+        left_axis.get_yaxis().set_visible(False)
+
+        right_axis = figure.add_axes([0.5, 0.2, 0.5, 0.7], aspect=1)
+        df.plot.pie(y='Aged 65 years and over', labels=None, autopct='%.1f%%', pctdistance=1.2,
+                    ax=right_axis,
+                    legend=False, textprops={'fontsize': 8})
+        right_axis.set_title('Number of pre-conditions age 65+')
+        right_axis.get_yaxis().set_visible(False)
+
+        figure.legend(labels=df['Unit'], loc='lower center',
+                      prop={'size': 8})
 
         return figure
 
@@ -79,5 +107,6 @@ class FigureProvider:
             'Daily Deaths': self.get_uk_daily_deaths(figure_size),
             'Weekly Deaths': self.get_uk_deaths_by_week(figure_size),
             'Deaths by Age Group': self.get_uk_daily_deaths_by_age_group(figure_size),
-            'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size)
+            'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size),
+            'Number of Pre-Conditions': self.get_uk_number_of_pre_conditions_for_covid_deaths(figure_size)
         }
