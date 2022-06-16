@@ -1,22 +1,21 @@
 # To-Do
+* Graph overall deaths UK in the past 30 years or whatever
+* Overall death cases in the UK, compare with covid deaths
 * Lockdown useful? 28 vs. 14 days in graph
   * death after how many days on average
-* Switch from Pie chart to sum diagram
 * Influenza graph & COVID graph
 * Tooltip for covid events when hovering (ONLY IF ONE GRAPH SHOWS AN IMPACT OF THE EVENTS)
-* For Presentation: Some sort of Guideline
-  * Graph -> We see this but why? -> next Graph
   
 ## Presentation
-0. Covid Deaths
-1. Covid deaths in relation to overall deaths
-2. Covid Deaths split into age groups
-3. Morph into split of 0-64 and 65+ (since we will use this mainly afterwards)
-4. Pre-Conditions?
+1. Todeszahlen 2020 - 2022 -> Anteil Corona
+2. Rauszoomen: Trends der letzten Jahrzehnte bis 2020. Was wurde für 2020 - 2022 erwartet? \
+Aus Kurve ein Balkendiagramm. Darauf dann die Coronatoten packen. Entspricht das ungefähr dem tatsächlichen Ergebnis? Oder wären die meisten da sowieso verstorben?
+3. Corona-Tote in Altersgruppen aufsplitten. Die dann in Altersgruppen 0-64 and 65+ morphen
+4. Vorbedingungen
+5. Hatte der Lockdown funktioniert?
 
-Periodizitäten
-1. Deaths curve over last 5-10 years. Is now the time where more people die again?
-2. Influenza curve vs. covid curve after excluding factors like increasing demographic age etc.
+xx. Vergleich mit Influenza?
+
 
 ## Idee
 Trend Sterberate pro Altersgruppe von 2012-Dez2019
