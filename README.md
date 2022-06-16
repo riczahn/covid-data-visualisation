@@ -10,6 +10,13 @@
 ## Presentation
 0. Covid Deaths
 1. Covid deaths in relation to overall deaths
+2. Covid Deaths split into age groups
+3. Morph into split of 0-64 and 65+ (since we will use this mainly afterwards)
+4. Pre-Conditions?
+
+Periodizitäten
+1. Deaths curve over last 5-10 years. Is now the time where more people die again?
+2. Influenza curve vs. covid curve after excluding factors like increasing demographic age etc.
 
 ## Idee
 Trend Sterberate pro Altersgruppe von 2012-Dez2019
