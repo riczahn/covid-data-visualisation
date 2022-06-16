@@ -71,22 +71,16 @@ class FigureProvider:
         df = df[df.Unit != 'Proportion of COVID-19 deaths with no pre-exisiting conditions']
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
-        left_axis = figure.add_axes([0, 0.2, 0.5, 0.7], aspect=1)
-        df.plot.pie(y='Aged 0 to 64 years ', labels=None, autopct='%.0f%%', pctdistance=1.2,
-                    ax=left_axis,
-                    legend=False, textprops={'fontsize': 8})
-        left_axis.set_title('Number of pre-conditions age 0-64')
-        left_axis.get_yaxis().set_visible(False)
+        figure.subplots_adjust(bottom=0.2)
+        axis = figure.add_subplot(111)
 
-        right_axis = figure.add_axes([0.5, 0.2, 0.5, 0.7], aspect=1)
-        df.plot.pie(y='Aged 65 years and over', labels=None, autopct='%.0f%%', pctdistance=1.2,
-                    ax=right_axis,
-                    legend=False, textprops={'fontsize': 8})
-        right_axis.set_title('Number of pre-conditions age 65+')
-        right_axis.get_yaxis().set_visible(False)
+        # Transpose table and drop last row
+        df = df.set_index('Unit').T
+        df = df[:-1]
+        # normalise
+        df = df.div(df.sum(axis=1), axis=0)
 
-        figure.legend(labels=df['Unit'], loc='lower center',
-                      prop={'size': 8})
+        df.plot(use_index=True, y=df.columns, kind='bar', stacked=True, ax=axis)
 
         return figure
 
