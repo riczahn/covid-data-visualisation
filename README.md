@@ -1,9 +1,9 @@
 # To-Do
-* Graph overall deaths UK in the past 30 years or whatever
-* Overall death cases in the UK, compare with covid deaths
-* Lockdown useful? 28 vs. 14 days in graph
-  * death after how many days on average
-* Influenza graph & COVID graph
+* Overall death cases in the UK, !! compare with covid deaths !!
+* Improve model for expected deaths 2020-2022
+    * Is there a difference to the actual number of deaths?
+* Deaths by age group begin the same time frame as other diagrams
+* Influenza graph & COVID graph (Mulham)
 * Tooltip for covid events when hovering (ONLY IF ONE GRAPH SHOWS AN IMPACT OF THE EVENTS)
   
 ## Presentation

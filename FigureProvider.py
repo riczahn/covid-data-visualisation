@@ -1,12 +1,14 @@
 import datetime
 
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
 import pandas as pd
+from statsmodels.tsa.stattools import adfuller
 
 from Formatter import Formatter
 from statsmodels.tsa.deterministic import DeterministicProcess
 from sklearn.linear_model import LinearRegression
+from statsmodels.tsa.arima.model import ARIMA
 
 
 class FigureProvider:
@@ -121,59 +123,37 @@ class FigureProvider:
         return figure
 
     def get_uk_yearly_deaths(self, figure_size):
-        df = pd.read_excel('data/uk/yearly_deaths.xls', sheet_name='Table', header=14, nrows=70)[1:]
-        df = df.set_index("Year")
-
+        original_data = pd.read_excel('data/uk/yearly_deaths.xls', sheet_name='Table', header=14)[1:]
         # invert to make 2019 be the last row
-        df = df.iloc[::-1]
+        original_data = original_data.iloc[::-1]
+
+        period_index = pd.PeriodIndex(data=original_data['Year'], freq='A')
+        original_data.index = period_index
+
+        # drop all columns besides the absolute death numbers
+        original_data = original_data.iloc[:, 1:2]
+
+        # create an ARIMA model and make a 5 year forecast
+        model = ARIMA(original_data, order=(5, 1, 10))
+        model_fit = model.fit()
+        forecast = model_fit.forecast(steps=5)
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
         figure.subplots_adjust(bottom=0.2)
         ax = figure.add_subplot(111)
 
-        df.plot(y='Number of deaths', ax=ax, color='black', alpha=0.5)
-
-        moving_average = df['Number of deaths'].rolling(
-            window=10,
-            center=True,
-            min_periods=5
-        ).mean()
-        # moving_average.plot(ax=ax, linewidth=3)
-
-        dp = DeterministicProcess(
-            index=df.index,
-            constant=True,
-            order=4,
-            drop=True,
-        )
-        x = dp.in_sample()
-
-        model = LinearRegression(fit_intercept=False)
-        # fitting on moving average or on actual values?
-        # model.fit(x, df['Number of deaths'])
-        model.fit(x, moving_average)
-
-        fitted_model = pd.Series(model.predict(x), index=x.index, name='Calculated Model')
-        fitted_model.plot(ax=ax, color='navy', legend=True)
-
-        forecast_steps = dp.out_of_sample(steps=3)
-        forecast = pd.Series(model.predict(forecast_steps), index=forecast_steps.index, name='Prediction')
-        print(forecast)
-        forecast.plot(ax=ax, color='r', legend=True)
+        original_data.plot(ax=ax, color='black')
+        forecast.plot(ax=ax, color='r', legend=True, label='Prediction')
 
         return figure
 
     def get_all_figures(self, figure_size):
         return {
             'Tests and Cases': self.get_uk_covid_tests_and_cases(figure_size),
-            'Yearly Deaths 1950 - 2019': self.get_uk_yearly_deaths(figure_size),
+            'Yearly Deaths 1830 - 2024': self.get_uk_yearly_deaths(figure_size),
             'Overall Deaths 2020-2021': self.get_uk_overall_deaths(figure_size),
             'Daily Deaths': self.get_uk_daily_deaths(figure_size),
             'Weekly Deaths by Age Group': self.get_uk_deaths_by_week(figure_size),
             'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size),
             'Number of Pre-Conditions': self.get_uk_number_of_pre_conditions_for_covid_deaths(figure_size)
         }
-
-if __name__ == '__main__':
-    FigureProvider().get_uk_yearly_deaths((30, 15))
-
