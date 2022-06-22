@@ -32,7 +32,7 @@ class FigureProvider:
         data_of_both_years = {**data_2020, **data_2021}
 
         period_index = pd.PeriodIndex(data=data_of_both_years.keys(), freq='W')
-        plottable_df = pd.DataFrame(data=data_of_both_years.values(), index=period_index, columns=['Weekly Deaths'])
+        plottable_df = pd.DataFrame(data=data_of_both_years.values(), index=period_index, columns=['Overall Deaths'])
 
         # parse values to float
         plottable_df = plottable_df.apply(lambda x: x.str.replace(',', '').astype(float), axis=1)
@@ -62,12 +62,14 @@ class FigureProvider:
 
         # drop first column (duplicated date column) and set index back to date
         all_covid_deaths = all_covid_deaths.iloc[:, 1:].set_index('date')
-        print(all_covid_deaths)
-        # todo here now make sure that the indexes are the same with the other dataframe and plot it
+
+        all_data = plottable_df.join(all_covid_deaths, how='left').fillna(0)
+        all_data['Covid Deaths'] = all_data['England'] + all_data['Wales']
+        all_data['Non-Covid Deaths'] = all_data['Overall Deaths'] - all_data['Covid Deaths']
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
         axis = figure.add_subplot(111)
-        plottable_df.plot(use_index=True, ax=axis, kind='bar')
+        all_data.plot(y=['Non-Covid Deaths', 'Covid Deaths'], kind='bar', stacked=True, color=['gray', 'red'], ax=axis)
 
         figure.autofmt_xdate()
 
