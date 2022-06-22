@@ -12,15 +12,15 @@ class FigureProvider:
         self.formatter = Formatter()
 
     def get_uk_overall_deaths(self, figure_size):
-        df = pd.read_csv('data/uk/deaths_registered_summary_statistics.csv').iloc[:, :-1]
-        df = df.set_index('Week number').T
+        overall_deaths = pd.read_csv('data/uk/deaths_registered_summary_statistics.csv').iloc[:, :-1]
+        overall_deaths = overall_deaths.set_index('Week number').T
 
         data_2021 = {}
         data_2020 = {}
 
         # transform data into a more usable format, where the week number is transformed
         # to the date of that weeks monday
-        for index, row in df.iterrows():
+        for index, row in overall_deaths.iterrows():
             week_as_date_2021 = datetime.datetime.strptime('2021-W' + index.strip() + '-1', "%Y-W%W-%w").strftime(
                 "%Y-%m-%d")
             data_2021[week_as_date_2021] = row['Total deaths, all ages (2021)']
@@ -37,9 +37,39 @@ class FigureProvider:
         # parse values to float
         plottable_df = plottable_df.apply(lambda x: x.str.replace(',', '').astype(float), axis=1)
 
+        covid_deaths = pd.read_csv('data/uk/weekly_covid_deaths.csv')
+
+        # remove all nations besides England and Wales and order by date ascending
+        covid_deaths_england = covid_deaths[covid_deaths.areaName == 'England'].iloc[::-1]
+        covid_deaths_wales = covid_deaths[covid_deaths.areaName == 'Wales'].iloc[::-1]
+
+        # drop all rows regarding 2022
+        covid_deaths_england = covid_deaths_england[~covid_deaths_england['date'].astype(str).str.startswith('2022-')]
+        covid_deaths_wales = covid_deaths_wales[~covid_deaths_wales['date'].astype(str).str.startswith('2022-')]
+
+        # create period index with week frequency
+        covid_period_index = pd.PeriodIndex(data=covid_deaths_england['date'], freq='W')
+        covid_deaths_england.index = covid_period_index
+        covid_deaths_wales.index = covid_period_index
+
+        # drop all columns except the deaths, but rename those after the nation
+        covid_deaths_england = covid_deaths_england.drop(columns=['date', 'areaCode', 'areaType', 'areaName']).rename(
+            columns={'newWeeklyNsoDeathsByRegDate': 'England'})
+        covid_deaths_wales = covid_deaths_wales.drop(columns=['date', 'areaCode', 'areaType', 'areaName']).rename(
+            columns={'newWeeklyNsoDeathsByRegDate': 'Wales'})
+
+        all_covid_deaths = pd.concat([covid_deaths_england.reset_index(), covid_deaths_wales.reset_index()], axis=1)
+
+        # drop first column (duplicated date column) and set index back to date
+        all_covid_deaths = all_covid_deaths.iloc[:, 1:].set_index('date')
+        print(all_covid_deaths)
+        # todo here now make sure that the indexes are the same with the other dataframe and plot it
+
         figure = plt.Figure(figsize=figure_size, dpi=100)
         axis = figure.add_subplot(111)
         plottable_df.plot(use_index=True, ax=axis, kind='bar')
+
+        figure.autofmt_xdate()
 
         return figure
 
