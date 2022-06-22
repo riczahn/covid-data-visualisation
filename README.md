@@ -1,5 +1,8 @@
 # To-Do
 * Add Graph for weekly covid deaths, in relation to all deaths
+  * normalise curve by removing heat deaths and winter deaths
+    * https://www.gov.uk/government/publications/phe-heatwave-mortality-monitoring/heatwave-mortality-monitoring-report-2020
+    * 2020 and 2003 had almost the same heat wave
 * Create Graph for Difference between expected and actual number of deaths 2020-2021
 * Deaths by age group begin the same time frame as other diagrams
 * Influenza graph & COVID graph (Mulham)
