@@ -1,14 +1,10 @@
 import datetime
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima.model import ARIMA
 
 from Formatter import Formatter
-from statsmodels.tsa.deterministic import DeterministicProcess
-from sklearn.linear_model import LinearRegression
-from statsmodels.tsa.arima.model import ARIMA
 
 
 class FigureProvider:
@@ -34,15 +30,16 @@ class FigureProvider:
             data_2020[week_as_date_2020] = row['Total deaths, all ages (2020)']
 
         data_of_both_years = {**data_2020, **data_2021}
-        cool_df = pd.DataFrame.from_dict(data_of_both_years, orient='index', columns=['Weekly Deaths'])
+
+        period_index = pd.PeriodIndex(data=data_of_both_years.keys(), freq='W')
+        plottable_df = pd.DataFrame(data=data_of_both_years.values(), index=period_index, columns=['Weekly Deaths'])
 
         # parse values to float
-        cool_df = cool_df.apply(lambda x: x.str.replace(',', '').astype(float), axis=1)
+        plottable_df = plottable_df.apply(lambda x: x.str.replace(',', '').astype(float), axis=1)
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
         axis = figure.add_subplot(111)
-        cool_df.plot(use_index=True, ax=axis, kind='bar')
-        # todo maybe also plot the part of covid deaths? So that we can see the impact of covid? Or in a different graph
+        plottable_df.plot(use_index=True, ax=axis, kind='bar')
 
         return figure
 
