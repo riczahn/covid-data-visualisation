@@ -178,18 +178,21 @@ class FigureProvider:
 
     def get_leading_causes_of_death(self, figure_size):
         df = pd.read_excel('data/uk/mortality_analysis_2013_to_2020.xlsx', sheet_name='Data', header=9, skipfooter=3, index_col=0)
-        print(df)
+
+        # add a column for the values of 2020 without COVID-19
+        df['2020 - w/o COVID-19'] = df[2020]
+        df.at['LC47 COVID-19', '2020 - w/o COVID-19'] = 0
 
         for column in df.columns:
             df[column] = df[column] / df[column].sum(axis=0)
 
         figure = plt.Figure(figsize=figure_size, dpi=100)
-        figure.subplots_adjust(bottom=0.2)
+        figure.subplots_adjust(bottom=0.25)
         ax = figure.add_subplot(111)
 
-        print(df.T)
-
         df.T.plot(kind='bar', stacked=True, ax=ax, legend=False)
+
+        figure.autofmt_xdate()
 
         return figure
 
