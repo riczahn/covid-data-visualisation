@@ -176,6 +176,23 @@ class FigureProvider:
 
         return figure
 
+    def get_leading_causes_of_death(self, figure_size):
+        df = pd.read_excel('data/uk/mortality_analysis_2013_to_2020.xlsx', sheet_name='Data', header=9, skipfooter=3, index_col=0)
+        print(df)
+
+        for column in df.columns:
+            df[column] = df[column] / df[column].sum(axis=0)
+
+        figure = plt.Figure(figsize=figure_size, dpi=100)
+        figure.subplots_adjust(bottom=0.2)
+        ax = figure.add_subplot(111)
+
+        print(df.T)
+
+        df.T.plot(kind='bar', stacked=True, ax=ax, legend=False)
+
+        return figure
+
     def get_all_figures(self, figure_size):
         return {
             'Tests and Cases': self.get_uk_covid_tests_and_cases(figure_size),
@@ -183,6 +200,11 @@ class FigureProvider:
             'Overall Deaths 2020-2021': self.get_uk_overall_deaths(figure_size),
             'Daily Deaths': self.get_uk_daily_deaths(figure_size),
             'Weekly Deaths by Age Group': self.get_uk_deaths_by_week(figure_size),
+            'Leading Causes of Death': self.get_leading_causes_of_death(figure_size),
             'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size),
             'Number of Pre-Conditions': self.get_uk_number_of_pre_conditions_for_covid_deaths(figure_size)
         }
+
+if __name__ == '__main__':
+    FigureProvider().get_leading_causes_of_death((10, 5))
+    plt.plot()
