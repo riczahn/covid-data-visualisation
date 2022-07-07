@@ -2,6 +2,8 @@ import datetime
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+import matplotlib.dates as mdates
 from statsmodels.tsa.arima.model import ARIMA
 
 from Formatter import Formatter
@@ -88,7 +90,7 @@ class FigureProvider:
         figure.autofmt_xdate()
         return figure
 
-    def get_uk_deaths_by_week(self, figure_size):
+    def get_uk_cases_by_week(self, figure_size):
         df = pd.read_excel('data/uk/Weekly_Influenza_and_COVID19_report_data_w27v2_2021.xlsx',
                            sheet_name='Figure 45. SARIWatch-ICUagegrp', header=8, nrows=53)
         df = df.drop(columns='Unnamed: 0')
@@ -106,6 +108,104 @@ class FigureProvider:
         axis.set_title('Weekly Covid Deaths by Age Group')
 
         # CHECK if is this data normalised to per 100.000 inhabitants?
+
+        return figure
+
+    def get_uk_weekly_deaths_per_age_group(self, figure_size):
+        data = pd.read_excel('data/uk/Weekly_covid_deaths.xlsx', sheet_name='Dataset', header=2)
+        data = data.drop(columns=['Geography', 'Geography code', 'Sex', 'Deaths'])
+
+        weekly_deaths_by_age_group = pd.DataFrame(
+            columns=['Week', '0-1', '1-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40-44',
+                     '45-49',
+                     '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80-84', '85-89', '90+'])
+
+        rows = []
+        current_week = None
+        current_row_2020 = {}
+        current_row_2021 = {}
+        current_row_2022 = {}
+        for index, row in data.iterrows():
+            if current_week != row['Week']:
+                # save old week to dict
+                if current_row_2020 != {} and '1-4' in current_row_2020:
+                    rows.append(current_row_2020)
+
+                if current_row_2021 != {} and '1-4' in current_row_2021:
+                    rows.append(current_row_2021)
+
+                if current_row_2022 != {} and '1-4' in current_row_2022:
+                    rows.append(current_row_2022)
+
+                # reset rows
+                current_row_2020 = {}
+                current_row_2021 = {}
+                current_row_2022 = {}
+
+                # transform week number to date
+                current_week = row['Week']
+                week_number = row['Week'][(len('Week ')):]
+                week_as_date_2020 = datetime.datetime.strptime('2020-W' + week_number.strip() + '-1',
+                                                               "%Y-W%W-%w").strftime("%Y-%m-%d")
+                current_row_2020['Week'] = week_as_date_2020
+
+                week_as_date_2021 = datetime.datetime.strptime('2021-W' + week_number.strip() + '-1',
+                                                               "%Y-W%W-%w").strftime("%Y-%m-%d")
+                current_row_2021['Week'] = week_as_date_2021
+
+                week_as_date_2022 = datetime.datetime.strptime('2022-W' + week_number.strip() + '-1',
+                                                               "%Y-W%W-%w").strftime("%Y-%m-%d")
+                current_row_2022['Week'] = week_as_date_2022
+
+            # only add rows that are not nan
+            if not np.isnan(row['2020']):
+                current_row_2020[row['AgeGroups']] = row['2020']
+            if not np.isnan(row['2021']):
+                current_row_2021[row['AgeGroups']] = row['2021']
+            if not np.isnan(row['2022']):
+                current_row_2022[row['AgeGroups']] = row['2022']
+
+        weekly_deaths_by_age_group = weekly_deaths_by_age_group.append(rows)
+
+        # create index
+        period_index = pd.PeriodIndex(data=weekly_deaths_by_age_group['Week'], freq='W')
+        weekly_deaths_by_age_group = weekly_deaths_by_age_group.set_index(period_index).drop(columns=['Week'])
+
+        # drop all rows with only zeros
+        rows_with_only_0 = []
+        for index, row in weekly_deaths_by_age_group.iterrows():
+            if row.sum() == 0.0:
+                rows_with_only_0.append(index)
+
+        weekly_deaths_by_age_group = weekly_deaths_by_age_group.drop(index=rows_with_only_0)
+
+        # combine age groups
+        weekly_deaths_by_age_group['0-14'] = weekly_deaths_by_age_group['0-1'] + weekly_deaths_by_age_group['1-4'] + \
+                                             weekly_deaths_by_age_group['5-9'] + weekly_deaths_by_age_group['10-14']
+
+        weekly_deaths_by_age_group['15-34'] = weekly_deaths_by_age_group['15-19'] + weekly_deaths_by_age_group[
+            '20-24'] + weekly_deaths_by_age_group['25-29'] + weekly_deaths_by_age_group['30-34']
+
+        weekly_deaths_by_age_group = weekly_deaths_by_age_group.drop(
+            columns=['0-1', '1-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34'])
+
+        # move the new columns to the left
+        cols = weekly_deaths_by_age_group.columns.tolist()
+        cols = cols[-2:] + cols[:-2]
+
+        weekly_deaths_by_age_group = weekly_deaths_by_age_group[cols]
+
+        # normalise
+        weekly_deaths_by_age_group = weekly_deaths_by_age_group.div(weekly_deaths_by_age_group.sum(axis=1), axis=0)
+
+        # sort
+        weekly_deaths_by_age_group.sort_index(inplace=True)
+        weekly_deaths_by_age_group.index = weekly_deaths_by_age_group.index.weekofyear
+
+        figure = plt.Figure(figsize=figure_size, dpi=100)
+        axis = figure.add_subplot(111)
+        figure.subplots_adjust(bottom=0.2)
+        weekly_deaths_by_age_group.plot(kind='bar', stacked=True, ax=axis)
 
         return figure
 
@@ -177,7 +277,8 @@ class FigureProvider:
         return figure
 
     def get_leading_causes_of_death(self, figure_size):
-        df = pd.read_excel('data/uk/mortality_analysis_2013_to_2020.xlsx', sheet_name='Data', header=9, skipfooter=3, index_col=0)
+        df = pd.read_excel('data/uk/mortality_analysis_2013_to_2020.xlsx', sheet_name='Data', header=9, skipfooter=3,
+                           index_col=0)
 
         # add a column for the values of 2020 without COVID-19
         df['2020 - w/o COVID-19'] = df[2020]
@@ -202,12 +303,14 @@ class FigureProvider:
             'Yearly Deaths 1830 - 2024': self.get_uk_yearly_deaths(figure_size),
             'Overall Deaths 2020-2021': self.get_uk_overall_deaths(figure_size),
             'Daily Deaths': self.get_uk_daily_deaths(figure_size),
-            'Weekly Deaths by Age Group': self.get_uk_deaths_by_week(figure_size),
+            'Weekly Cases by Age Group': self.get_uk_cases_by_week(figure_size),
+            'Weekly Deaths by Age Group': self.get_uk_weekly_deaths_per_age_group(figure_size),
             'Leading Causes of Death': self.get_leading_causes_of_death(figure_size),
             'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size),
             'Number of Pre-Conditions': self.get_uk_number_of_pre_conditions_for_covid_deaths(figure_size)
         }
 
+
 if __name__ == '__main__':
-    FigureProvider().get_leading_causes_of_death((10, 5))
+    FigureProvider().get_uk_weekly_deaths_per_age_group((10, 5))
     plt.plot()
