@@ -1,7 +1,6 @@
 import tkinter as tk
 
 import Constants
-from FigureProvider import FigureProvider
 from Lockdown import events, lockdowns
 from exception.InvalidParameterException import InvalidParameterException
 from view.Frame import Frame
@@ -78,11 +77,3 @@ class GuiController(tk.Tk):
             raise InvalidParameterException(f'Unsupported action type {action}')
 
         frame.graph.canvas.draw()
-
-
-if __name__ == '__main__':
-    figure_provider = FigureProvider()
-    all_figures = figure_provider.get_all_figures(Constants.LARGE_FIGURE_SIZE)
-
-    gui = GuiController(all_figures)
-    gui.mainloop()

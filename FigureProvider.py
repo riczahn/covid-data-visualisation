@@ -3,7 +3,6 @@ import datetime
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import matplotlib.dates as mdates
 from statsmodels.tsa.arima.model import ARIMA
 
 from Formatter import Formatter
@@ -309,8 +308,3 @@ class FigureProvider:
             'Pre-Conditions': self.get_uk_pre_conditions_for_covid_deaths(figure_size),
             'Number of Pre-Conditions': self.get_uk_number_of_pre_conditions_for_covid_deaths(figure_size)
         }
-
-
-if __name__ == '__main__':
-    FigureProvider().get_uk_weekly_deaths_per_age_group((10, 5))
-    plt.plot()
