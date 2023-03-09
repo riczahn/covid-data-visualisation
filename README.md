@@ -1,18 +1,28 @@
-# To-Do
-* Add Graph for weekly covid deaths, in relation to all deaths
-  * normalise curve by removing heat deaths and winter deaths
-    * https://www.gov.uk/government/publications/phe-heatwave-mortality-monitoring/heatwave-mortality-monitoring-report-2020
-    * 2020 and 2003 had almost the same heat wave
-* Create Graph for Difference between expected and actual number of deaths 2020-2021
-* Deaths by age group begin the same time frame as other diagrams
-* Influenza graph & COVID graph (Mulham)
-  
-## Ablauf Präsentation
-1. Todeszahlen 2020 - 2022 -> Anteil Corona
-2. Rauszoomen: Trends der letzten Jahrzehnte bis 2020. Was wurde für 2020 - 2022 erwartet? \
-Aus Kurve ein Balkendiagramm. Darauf dann die Coronatoten packen. Entspricht das ungefähr dem tatsächlichen Ergebnis? Oder wären die meisten da sowieso verstorben?
-3. Corona-Tote in Altersgruppen aufsplitten. Die dann in Altersgruppen 0-64 and 65+ morphen
-4. Vorbedingungen
-5. Hatte der Lockdown funktioniert?
+## Covid Data Visualisation
+This project presents a visualisation tool, written in Python 3, that plots COVID-19 data provided by the [Office for National Statistics (UK)](https://www.ons.gov.uk/).
+It's the result of the course "Predictive Analytics and Data Security in the interconnected World" at the University of Applied Sciences Brandenburg in 2022.
+The [full report](report/covid-19-report.pdf) can be seen in the report folder.
 
-xx. Vergleich mit Influenza?
+
+## Fields of Analysis
+The application plots graphs for the following matters:
+* Relationship between the amount of performed tests and reported Covid-cases
+* Yearly Deaths between 1830 and 2019 in the UK, with a prediction for 2020 and 2021
+* Relationship between Covid related deaths and overall deaths in the UK
+* Daily Covid Deaths and the impacts of Lockdowns
+* Distribution of Covid Deaths over age groups
+* Leading causes of overall deaths between 2013 and 2020
+* Relationship between pre-conditions and Covid deaths
+
+## How to Run
+1. Checkout this Repository
+2. Install Python 3 and install the libraries defined in [requirements.txt](requirements.txt)
+3. Run [Main.py](Main.py)
+
+## Authors
+Richard Zahn\
+Mulham Alesi
+
+
+#### Disclaimer
+I do not own the used data and do not guarantee for the correctness of it. This is a non-serious, unbiased project.
